@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>fragments</title>
+</head>
+<body>
+<div th:fragment="header(member)" class="top-bar">
+	<div class="content">
+		<img src="images/r-logo.jpg" alt="로고" class="top-left logo" onclick="gohome()">
+		<h2 class="top-left top-home">Board</h2>
+		<nav class="top-right">
+			<ul>
+				<th:block th:if="${member==null}">
+					<li><a th:href="@{loginForm}">login</a></li>
+					<li><a th:href="@{joinForm}">join</a></li>
+				</th:block>
+				<th:block th:unless="${member==null}">
+					<li th:text="${member.m_id}+'님'"></li>
+					<li><a th:href="@{/logout}">logout</a></li>
+				</th:block>
+				<!--<a> 태그는 모두 @GetMapping 으로 작성-->
+			</ul>
+		</nav>
+	</div>
+	<script th:inline="javascript">
+        const mem = [[${session.member}]];
+
+        function gohome() {
+            if (mem != null) location.href = "boardList?pageNum=1";//로그인 한 상태
+            else location.href = "/";//로그인 안한 상태
+        }
+	</script>
+</div>
+<div th:fragment="footer" class="footer-bar">
+	<div class="content">
+		<div class="fcontents">
+			<img class="footer-logo" src="images/r-logo-v.png">
+			<span class="footer-txt">
+				&copy;board
+			</span>
+		</div>
+	</div>
+</div>
+</body>
+</html>
