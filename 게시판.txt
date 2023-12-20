@@ -1,0 +1,372 @@
+게시판 프로젝트
+기능
+-회원 가입
+-로그인/아웃
+-게시글 목록 보기
+-게시글 작성
+-게시글 상세 내용 보기
+-게시글 수정/삭제
+-게시글 파일 업로드
+-게시글 조회수 증가
+-댓글 작성
+
+날짜 입력 형식(생일 입력 부분)
+-8자리 숫자:20230101
+-날짜 형식의 문자열:2023-01-01
+-input 태그의 type을 date로
+
+프로젝트 생성 시 추가할 dependency
+Developer Tools>
+- Spring Boot DevTools
+- Lombok
+Web>
+- Spring Web
+template Engines>
+- Thymeleaf
+SQL>
+-Mybaits Framework
+-MySQL Driver
+
+파일)
+프로젝트명>src>main>java>com>example>프로젝트명>
+controller>
+    MemberController.java
+    BoardRestController.java
+    BoardController.java
+dao>
+    MemberDao.java
+    BoardDao.java
+dto>
+    MemberDto.java
+    BoardDto.java
+    SearchDto.java
+    BoardFileDto.java
+    ReplyDto.java
+service>
+    MemberService.java
+    BoardService.java
+util>
+    PagingUtil.java
+    SessionIntercepter.java
+config>
+    WebConfig.java
+
+프로젝트명>src>main>resources>
+mappers>
+    MemberDao.xml
+    BoardDao.xml
+static>
+    css>
+        style.css
+    images>
+        이미지 파일
+    js>
+        jquery-3.7.1.min.js
+templates>
+    index.html
+    fragments.html
+    joinForm.html
+    loginForm.html
+    boardList.html
+    boardDetail.html
+    writeForm.html
+    updateForm.html
+src>main>webapp>
+    upload(파일 저장용 폴더 자동 생성)>
+        여기에 업로드한 파일이 저장됨
+application.properties
+log4jdbc.log4j2.properties
+logback.xml
+
+
+추가 라이브러리 (to build.gradle)
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+    implementation 'org.springframework.security:spring-security-core'
+
+추가 파일 (to src/main/resources)
+    - log4jdbc.log4j2.properties
+    - logback.xml
+
+logback.xml에 수정
+    첫번째 logger에 패키지 입력(com.group.projectname)
+    level을 info 지정
+    - 패키지 로그
+    - sqlonly
+    - resultset, resultsettable
+    - root
+
+DAO 단위 테스트:나머지 부분이 완성되어 있지 않은 상태에서 부분별로 테스트를 수행.
+    MyBatis를 활용하는 Dao 단위 테스트는 @MybatisTest 활용
+    Junit:자바로 작성한 코드의 테스트 도구
+
+application.properties 설정 추가(datasource setting)
+    #port number setting
+    server.port=80
+    #datasource setting
+    spring.web.resources.static-locations=classpath:static/
+    #devtools setting
+    spring.devtools.livereload.enabled=true
+    spring.devtools.restart.enabled=true
+    spring.thymeleaf.cache=false
+    #datasource setting // 연동할 DB 계정, 스키마,
+    spring.datasource.driver-class-name=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    spring.datasource.url=jdbc:log4jdbc:mysql://127.0.0.1:3306/boarddb?serverTimezone=Asia/Seoul <-해당 컴퓨터의 IP 주소
+    spring.datasource.username=devboard
+    spring.datasource.password=P@ssw0rd
+    #mybatis setting
+    mybatis.mappe-rlocations=classpath:mappers/*.xml
+    mybatis.type-aliases-package=com.example.springboard02.dto <-패키지 이름
+    #file upload setting 파일 업로드 관련 설정
+    spring.servlet.multipart.max-file-size=4MB
+    spring.servlet.multipart.max-request-size=8MB
+    #error page setting
+    server.error.whitelabel.enabled=false
+
+resource에 mappers 폴더 생성
+springjdbc01에 controller, dao, dto, service 패키지 생성
+static 폴더에 css(style.css), images, js(jquery-3.7.1.min.js) 폴더 생성
+
+DB 생성
+-- 1.schema 생성
+create database if not exists schema_name;
+
+-- 2.사용자 id/password 생성
+create user if not exists 'user_name'@'%'
+identified by 'P@ssw0rd';
+-- '%':다른 컴퓨터에도 접속이 가능하게 함(따로 떨어져 있는 PC)
+-- 'localhost'(127.0.0.1):같은 컴퓨터에만 접속 가능
+
+-- 3.사용자에게 공간 할당 및 모든 권한 부여
+grant all privileges on schema_name.* to 'user_name'@'%';
+
+-- 4. 사용자 인증 처리용 비밀번호 지정
+alter user 'user_name'@'%'
+identified with mysql_native_password by 'P@ssw0rd';
+
+-- 5.공간 처리 작업 완료
+flush privileges;
+
+db 정보를 application.properties 에 지정
+spring.datasource.url=jdbc:log4jdbc:mysql://127.0.0.1:3306/schema_name?serverTimezone=Asia/Seoul
+spring.datasource.username=user_name
+spring.datasource.password=P@ssw0rd
+
+test의 @DisplayName이 출력되도록 설정
+File | Settings | Build, Execution, Deployment | Build Tools | Gradle -> run testing using->Intellij IDEA로 설정
+
+@TestMethodOrder
+테스트 메소드 순서
+1.@TestMethodOrder(MethodOrderer.MethodName.class)//메소드 이름순으로 실행(기본값)
+2.@TestMethodOrder(MethodOrderer.DisplayName.class)//@DisplayName의 알파벳 순으로 실행
+3.@TestMethodOrder(MethodOrderer.OrderAnnotation.class)//@Order 애노테이션 사용. 그 순번에 따라 실행
+
+파일 업로드 처리
+    <input type="file>: html 기본 제공 입력 양식:버튼 + 텍스트 출력
+    업로드를 위한 파일 선택창을 기본 제공
+
+    Multi-part:한 웹 문서 안에 문자와 바이너리 데이터(이미지, 동영상, 음성 등 기타 형식의 파일)가 포함된 상황
+    enctype:전송할 데이터가 multi-part임을 표시하는 속성
+
+    MIME(Multipurpose Internet Mail Extension):e-mail을 위한 인터넷 표준 포멧
+        content-type:문서에 포함된 내용을 구성한 형태 지정
+        기본 형태:text/plant나 text/html. 여러가지 -  enctype="multipart/...
+    중요)파일 전송 시 반드시 form에 enctype="multipart/form-data"를 입력
+
+    업로드 관련 설정(application.properties):업로드 파일 용량 제한 설정
+    -업로드 파일 최대 크기:max-file-size
+    -request 객체에 담을 수 있는 최대 크기:max-request-size(기본값 각각 10MB)
+    spring.servlet.multipart.max-file-size=4MB
+    spring.servlet.multipart.max-request-size=8MB
+    추가할 dependency는 없음. 구 버전은 추가해야함
+
+
+파일 태그 스타일 처리
+    파일 태그<input type="file"> 는 디자인 변경이 용이하지 않기에 label 태그를 활용하여 스타일을 처리.
+    대신 선택한 파일명을 보이기 위해 js로 파일명을 또 다른 input 태그에 출력
+    파일 1개:파일명을 그대로 출력
+    파일 2개 이상:'첫번쩨 파일명 외 n개'로 출력
+    파일 태그는 'multuple' 속성으로 단일 선택 또는 다중 선택을 하도록 설정 가능(multi-part와 관계없음)
+
+    form 태그 내 input 태그에 readonly 속성을 부여하면 내용을 변경할 수 없지만 전송은 가능.
+    전송하지 않는 input을 만들 경우 disable 사용
+
+파일을 처리하는 상황
+1.한 html 문서에 하나의 파일 태그가 있는 경우:하나의 반복문으로 처리. Controller에서 하나의 List로 받아서 처리
+    1)단일 파일 전송 - list.get(0);
+    2)다중 파일 전송(multuple)
+
+2.한 html 문서에 하나 이상 파일 태그가 있는 경우
+    1)같은 name으로 처리하는 경우:하나의 반복문으로 처리
+        -단일 파일 전송:첫번쩨 파일 태그의 파일이 0번, 두번쩨 파일 태그의 파일이 1번
+        -다중 파일 전송(multuple):첫번쩨 파일 태그의 파일들이 앞번호에 배치되고 두번쩨 파일 태그의 파일들이 뒷번호에 배치
+        -단일 전송과 다중 전송이 혼용된 경우
+
+    2)다른 name으로 처리하는 경우:여러 반복문으로 처리. Controller에서 다른의 List로 받아서 처리
+        -단일 파일 전송
+        -다중 파일 전송(multuple)
+        -단일 전송과 다중 전송이 혼용된 경우
+
+서버의 업로드 파일 저장 방식
+    1.내용과 파일을 함께 저장
+        blob 타입으로 파일을 바이너리 데이터로 처리하여 문자열처럼 글 내용과 같이 저장.(문서 중간에 파일이 들어간 상태)
+        이 방식을 처리하기 위한 에디터 필요(wysiwyg 방식의 에디터)
+    2.내용과 파일을 따로 저장
+        내용은 DB로, 파일은 파일 서버나 특정 폴더로 저장. 파일 정보를 저장할 테이블 또는 컬럼이 필요.
+
+    참고)WYSIWYG(What You See Is What You Get):보이는 대로 처리.
+    워드 프로세서(한컴, MS-Office 등)
+    웹용 에디터(Naver smart editor 등)
+    내용과 다양한 파일을 함깨 저장/편집 가능한 방식
+
+파일 저장 시 파일명을 변경하는 이유:여러 사람이 공유하는 시스템이기에,
+같은 이름으로 저장하면 나중에 업로드 된 파일로 덮어 쓰기되기 때문에
+다른 이름으로 변경하여 저장할 필요가 있음.
+->밀리초 값을 파일 이름으로 사용
+
+파일을 저장할 위치
+    서버 내에서의 전통적인 파일 저장 위치:webapp 폴더 하위 영역
+    webapp 폴더 생성. 실제 파일 저장 폴더는 자동 생성하도록 처리
+    파일 저장 폴더명:upload
+
+게시글 번호 처리
+    파일 저장 시 게시글의 번호가 외래키로 같이 저장되야 함
+    게시글 번호가 게시글이 insert 시 생성
+    저장과 번호를 구하는 작업이 동시에 진행되면 좋지만 시간차가 발생.
+    ->시간차가 발생하는 동안 파일의 게시글 번호에 다른 게시글의 번호가 저장되는 경우가 있음
+    insert 작업 직후(mysql) 또는 직전(오라클) 키값을 구하도록 작업 필요->Mybatis가 제공하는 기능:selectKey
+
+selectKey:자동 증가 속성을 갖는 칼럼이 포함된 테이블에 데이터를 삽입할 경우, 처리 후에 기본키 값을 알 수 있음.
+insert 쿼리문 실행 직후 삽입된 데이터의 기본키를 바로 구하는 경우에 사용
+
+주요 속성)
+1)keyProperty:selectKey 구문의 결과가 저장될 대상 변수.
+2)resultType:키값의 자료형.
+3)order:selecKey 부분이 처리될 순서. before/after
+    -before:키를 먼저 조회하고 그 값을 keyProperty에 저장한 다음 insert문 실행
+    -after:insert문 실행 후 키를 조회하여 그 값을 keyProperty에 저장
+4)useGeneratedKeys:insert 태그에 작성하는 속성. selectKey 사용 여부 결정
+
+게시글 저장에 관련된 작업
+1.게시글 저장(BoardDao) - insert, selectKey
+2.파일 저장 및 파일 정보 저장(BoardDao)
+3.회원 point 수정 및 세션에 다시 저장(MemberDao)
+
+HttpSession(저장 공간) 활용
+    저장 공간 제공. 모든 자료형 및 객체(DTO) 저장 가능
+    ex)MemberDto mDto=(MemberDto)session.getAttribute("member");
+    setAttribute("식별자", 데이터);
+    정수 저장:session.getAttribute("num",new Integer(10));
+    문자열 저장:session.getAttribute("str","문자열");
+    객체(DTO):session.getAttribute("obj",new Dto());
+저장 시 객체 형태로 변환 필요. Object 객체로 Upcasting 자동 처리
+
+저장된 정보를 꺼내올 때:getAttribute("식별자");
+    원래의 객체 형태로 복구해서 사용(Downcasting)
+    정수 꺼내기:(Integer)session.getAttribute("num");
+    문자열 꺼내기:(String)session.getAttribute("str");
+    객체:(Dto)session.getAttribute("obj");
+캐스트 연산자 '(타입)'를 앞에 붙여햐 함
+
+파일 저장 처리
+    파일 업로드 유무 확인:전송된 파일 목록의 size(파일 개수)는 업로드와 상관없이 무조건 1
+    업로드를 안하면 파일명에 ""이 들어옴
+
+DB Transaction 처리
+    게시글 작성시 3가지 처리를 동시에 진행
+    1.파일 저장
+    2.파일 정보 저장
+    3.회원 point 정보 수정
+    위 작업 중 하나라도 실패할 경우 제시글 저장도 처리되지 않도록 해야 함
+
+    필요한 객체)
+    1.PlatformTransactionManager:트랜젝션 관리 객체
+    2.TransactionDefinition:트랜젝션 속성 정의 객체
+    3.TransactionStatus:정의된 속성에 따라 트랜젝션 상태를 관리하는 객체
+        처리 방법:commit/rollback
+    컬럼에 설치한 auto increment 값은 복구 안됨.
+
+글 내용 상세보기(+수정/삭제)
+    제목 클릭->상세 페이지로 이동(게시글 번호로 DB 검색)
+    파일 목록, 댓글 목록도 상세 페이지로 전달하여 출력
+
+thymeleaf url에 패러미터(변수값) 보내기
+get 방식으로 데이터를 전송하는 방식
+    HTML 방식:http://url?data1=d1&data2=d2
+    parameter - data1, data2
+    value - d1,d2 //넘겨야(전송) 하는 값
+    Controller에소 받을 때:메소드명(String data1, String data2){...}
+    HTML 방식:http://url?data1=d1&data2=d2
+    Thymeleaf 방식:th:tref="@{url(data1=d1, data2=d2)}"
+
+파일 다운로드 처리
+    사용자의 컴퓨터(브라우저) 쪽으로 직접 파일 데이터를 전송하는 방식.
+    Response 객체에 요청한 파일을 담아서 전송한다.
+    Controlle 및 Service 메소드의 반환형 : ResponseEntity
+    웹 사이트(Spring Framework)에서의 파일은 자원(Resource)으로 취급.
+    응답(Response) 객체에 자원(파일)을 담기위한 객체.
+    - ok() : 브라우저에게 전송받은 데이터가 정상적임을 공지.
+    - contentType() : 전송되는 데이터의 종류(형태)를 지정.
+    - cacheControl() : 브라우저 캐시 처리에 대한 명령을 지정.
+    - header() : 전송되는 데이터의 헤더를 처리하는 메소드.
+                파일의 이름을 지정하는데 사용.
+    - body() : 전송되는 데이터의 바디에 파일의 내용을 담기위해 사용.
+
+    전송되는 데이터 = 헤더 + 바디
+        헤더 : 데이터가 가야할 목적지 주소, 보내는 컴퓨터의 주소 등
+              처리해야할 내용을 저장.
+        바디 : 전송할 데이터를 저장.
+
+수정/삭제 처리
+    자신이 작성한 글에 대해서만 수정/삭제 가능하도록 처리
+    1.버튼을 표시하되 실행 불가
+    2.자신의 글이 아니면 버튼 숨김()->이 방식으로 처리
+
+세션에서 객체(DTO) 꺼낼 때 주의점
+    session에서 dto 저장후, dto의 멤버변수 값을 꺼낼때,
+    session에 dto가 저장되있지 않을 경우 에러 발생(dto가 없는데 멤버변수 가져오라고 하는 꼴)
+    1차로 dto를 꺼내서 null인지 확인 후 멤버변수 값을 꺼내오는 순으로 작업
+
+삭제
+    게시글 및 게시글에 연관된 파일 목록과 댓글 목록을 삭제.
+    파일 목록과 댓글 목록에 게시글 번호가 외래키로 들어가기 때문에 게시글 삭제를 마지막 순서로 진행
+    -트랜젝션 처리 요구
+    -저장한 파일도 같이 삭제
+
+수정
+    저장된 내용(게시글, 파일 등)을 화면에 출력하고 수정할 내용을 입력받아서 처리(화면 구조가 writeForm 과 유사)
+
+댓글 처리
+
+에러 페이지(404 not found, 500 내부 서버 오류)
+    Spring Framework에서 제공하는 기본 에러 페이지-Whitelabel page
+    application.properties에서 설정 변경
+    HTTP(Hyper Text Transfer Protocol) 상태 및 해당 코드
+        1)정상(ok):200
+        2)패러미터 부족(Bad request):400
+        3)페이지 없음(Page Not Found):404
+        4)내부 서버 오류(Server error):500
+    HTTP 상에서 전송되는 데이터 구조
+    header 와 body 로 구성. 헤더에는 전송되는 데이터를 처리할 때 활용되는 정보가 포함되며, 바디에는 데이터가 포함됨.
+    헤더에 포함되는 정보
+    -상태 정보(코드), content=type, 데이터 크기, 파일 이름 등
+
+    templates 폴더에 error 폴더 생성
+    이 폴더에 404.html, 500.html 파일 생성 및 작성
+
+세션 인터셉터(비인가 접근 제어)
+    로그인 안한 상태에서 접근할 수 없는 페이지로의 접속을 통제
+    게시판 프로젝트에서는 첫 페이지, 로그인 페이지, 회원 가입 페이지를 제외한
+    모든 페이지에서 로그인을 하지 않으면 접근할 수 없도록 제한
+    2개의 클래스 필요
+    config:인터셉트 대상 및 비 대상 페이지 설정
+    intercepter:로그인 사전 및 사후 처리 관련 코드 작성
+
+실제 서버 운영
+    개발용 컴퓨터:DB 서버(MySQL, 오라클 등), 개발 도구(intellij 등), Windows OS(운영체제)
+    서버 켬퓨터:실제 서비스를 운영하는 컴퓨터. Linux OS, MS-ServerOS bulid 폴더의 파일들로 release(릴리즈)한다.
+
+게시판을 활용한 자유 주제 프로젝트
+-관리자 로그인을 통한 물품 관리 프로젝트
+-erp 프로그램
+-sns 클론 코딩
+...etc
