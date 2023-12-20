@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - MemberDaoTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>MemberDaoTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.example.springboard02.html">com.example.springboard02</a> &gt; MemberDaoTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1.299s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">MemberDao insert</td>
+<td class="success">insertMemberTest()</td>
+<td class="success">1.269s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">MemberDao id check</td>
+<td class="success">selectIdTest()</td>
+<td class="success">0.030s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>09:12:33 [Test worker] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.example.springboard02.MemberDaoTest]: MemberDaoTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+09:12:33 [Test worker] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.example.springboard02.Springboard02Application for test class com.example.springboard02.MemberDaoTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.5)
+
+09:12:33 [Test worker] INFO  c.e.springboard02.MemberDaoTest - Starting MemberDaoTest using Java 17.0.3 with PID 1388 (started by soap1 in C:\spring-work\springboard02)
+09:12:33 [Test worker] INFO  c.e.springboard02.MemberDaoTest - No active profile set, falling back to 1 default profile: &quot;default&quot;
+09:12:34 [Test worker] INFO  c.e.springboard02.MemberDaoTest - Started MemberDaoTest in 1.259 seconds (process running for 2.334)
+09:12:34 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+09:12:35 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection net.sf.log4jdbc.sql.jdbcapi.ConnectionSpy@14efa279
+09:12:35 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+09:12:36 [Test worker] INFO  jdbc.sqlonly - insert into member values ('user01', '1111', 'user01', '2001-04-10', '부천시', '010-1234-5678', default)
+
+09:12:36 [Test worker] INFO  jdbc.sqlonly - select count(*) from board.member where m_id='test'
+
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.new ResultSet returned 
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.getMetaData() returned com.mysql.cj.jdbc.result.ResultSetMetaData@ca2cd5e - Field level information: 
+	com.mysql.cj.result.Field@a120b9[dbName=null,tableName=null,originalTableName=null,columnName=count(*),originalColumnName=null,mysqlType=8(FIELD_TYPE_BIGINT),sqlType=-5,flags= BINARY, charsetIndex=63, charsetName=ISO-8859-1]
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.getType() returned 1003
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.isClosed() returned false
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.next() returned true
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.getInt(count(*)) returned 1
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.isClosed() returned false
+09:12:36 [Test worker] INFO  jdbc.resultsettable - 
+|---------|
+|count(*) |
+|---------|
+|1        |
+|---------|
+
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.next() returned false
+09:12:36 [Test worker] INFO  jdbc.resultset - 1. ResultSet.close() returned void
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.3</a> at 2023. 10. 30. 오전 9:12:36</p>
+</div>
+</div>
+</body>
+</html>
